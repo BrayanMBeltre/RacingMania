@@ -14,7 +14,7 @@ var lives = 5;
 // - Invert oponent's car direction
 // - Add a start screen
 // - Add side barriers : Brayan
-// - Add restart button
+// - Add restart button : Brayan
 // - Add background music
 // - Add "Ammet"
 // DONE - Add another line of cars : Brayan
@@ -120,11 +120,44 @@ function draw() {
   if (lives <= 0) {
     noLoop();
 
-    textSize(60);
-    textFont(font);
-    textStyle(BOLD);
-    textAlign(CENTER);
-    fill(255);
-    text("GAME OVER", width / 2, height / 2);
+    gameOver();
+  }
+}
+
+// game over screen
+function gameOver() {
+  overlay();
+
+  textSize(60);
+  textFont(font);
+  textStyle(BOLD);
+  textAlign(CENTER);
+  fill(255);
+  text("GAME OVER", width / 2, height / 2);
+
+  textSize(20);
+  text("press ENTER to restart", width / 2, height / 2 + 60);
+}
+
+function overlay() {
+  fill(0, 0, 0, 100);
+  rect(0, 0, width, height);
+}
+
+function restart() {
+  opponents = [];
+  roadMarkings = [];
+  score = 0;
+  lives = 5;
+
+  opponents.push(new Opponent());
+  player = new Player();
+
+  loop();
+}
+
+function keyPressed() {
+  if (keyCode === ENTER) {
+    restart();
   }
 }
