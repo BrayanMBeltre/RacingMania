@@ -1,3 +1,4 @@
+var roadWidth = 250;
 var im_car_green;
 var im_car_red;
 var im_car_purple;
