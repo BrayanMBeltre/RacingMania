@@ -4,7 +4,12 @@ function Opponent() {
 
   this.y = height + this.h;
 
-  this.x = floor(random(0, width - this.w));
+  // Randomly place the opponent on the road on one of the lanes
+  const segment = roadWidth / 3;
+  const lane = floor(random(0, 3));
+  this.x = floor(segment * lane + segment / 2 - this.w / 2) + sideRoadWidth;
+
+  // this.x = floor(random(0, roadWidth - this.w));
   this.speed = playerSpeed - 1;
   this.isOvertakenBy = false;
 

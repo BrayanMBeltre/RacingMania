@@ -2,7 +2,11 @@ function Ammet() {
   this.w = 80;
   this.h = 80;
 
-  this.x = floor(random(0, width - this.w));
+  // Randomly place the opponent on the road on one of the lanes
+  const segment = roadWidth / 3;
+  const lane = floor(random(0, 3));
+  this.x = floor(segment * lane + segment / 2 - this.w / 2) + sideRoadWidth;
+
   this.y = -this.h;
   this.speed = playerSpeed - 1;
 

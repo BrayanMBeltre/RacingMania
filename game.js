@@ -1,4 +1,8 @@
+var screenWidth = 360;
+var screenHeight = 660;
 var roadWidth = 250;
+var sideRoadWidth = (screenWidth - roadWidth) / 2;
+
 var im_car_green;
 var im_car_red;
 var im_boom;
@@ -9,24 +13,23 @@ var opponents = [];
 var ammets = [];
 var roadMarkings = [];
 var score = 0;
-var lives = 5;
+var lives = 3;
 var infractions = 0;
+var kilometers = 100;
 
 // TODO:
 // - Add sound effects
-// - Invert oponent's car direction
+// DONE - Invert oponent's car direction
 // - Add a start screen
-// - Add side barriers : Brayan
-// - Add restart button
+// WIP - Add side barriers : Brayan
+// DONE - Add restart button
 // - Add background music
-// - Add "Ammet"
+// WIP - Add "Ammet"
 // DONE - Add another line of cars : Brayan
 // - Make the car move fixed distance when turning
-// - Make
-// - car stop to collision Ale - asi dices?
-// - Change score for Time
-// - When you crash against an "Ammet" you loose 1 life
-// - When you crash against a car you loose 2 lives
+// DONE - Change score for km
+// DONE- When you crash against an "Ammet" get 1 infraction
+// DONE- When you crash against a car you loose 1 lives
 
 function preload() {
   im_car_green = loadImage("assets/Car_Green.png");
@@ -37,7 +40,11 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(360, 660);
+  createCanvas(screenWidth, screenHeight);
+
+  //By default, rotations are specified in radians
+  angleMode(DEGREES);
+
   // frameRate(50);  // se puede usar esto para diferentes dificultados
 
   roadMarkings.push(new roadMarking());
@@ -48,6 +55,17 @@ function setup() {
 
 function draw() {
   background(44, 44, 44);
+
+  // Show side roads
+  strokeWeight(0);
+  fill(255, 255, 255);
+  rect(0, 0, sideRoadWidth, screenHeight);
+  rect(screenWidth - sideRoadWidth, 0, sideRoadWidth, screenHeight);
+
+  // each 60 frames, kilometers decrease by 1
+  if (frameCount % 60 === 0) {
+    kilometers -= 1;
+  }
 
   // New road markings appear after certain number of frames
   if (frameCount % 25 === 0) {
@@ -88,10 +106,10 @@ function draw() {
       opponents[i].boom();
       opponents.splice(i, 1);
 
-      // Penalty for collision is -10, and you loose one life
-      score = score >= 10 ? score - 10 : 0;
-      lives -= 2;
+      // Penalty for collision with opponent
+      lives -= 1;
     }
+
     // Remove opponents once the are off the screen
     else if (opponents[i].offscreen()) {
       opponents.splice(i, 1);
@@ -135,6 +153,7 @@ function draw() {
   if (keyIsDown(LEFT_ARROW)) {
     player.turnLeft();
   }
+
   if (keyIsDown(RIGHT_ARROW)) {
     player.turnRight();
   }
@@ -144,7 +163,7 @@ function draw() {
   textFont(font);
   textAlign(LEFT);
   fill(255);
-  text("Score: " + score, 30, 60);
+  text("Km: " + kilometers, 30, 60);
 
   // Show infractions
   textSize(40);

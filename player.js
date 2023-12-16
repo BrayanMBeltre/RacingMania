@@ -12,11 +12,11 @@ function Player() {
 
   this.turnLeft = function () {
     this.x -= 5;
-    this.x = constrain(this.x, 0, width - this.w);
+    this.x = constrain(this.x, sideRoadWidth, width - this.w);
   };
 
   this.turnRight = function () {
     this.x += 5;
-    this.x = constrain(this.x, 0, width - this.w);
+    this.x = constrain(this.x, 0, width - sideRoadWidth - this.w);
   };
 }
