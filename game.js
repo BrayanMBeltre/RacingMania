@@ -6,9 +6,11 @@ var im_heart;
 var font;
 var playerSpeed = 7;
 var opponents = [];
+var ammets = [];
 var roadMarkings = [];
 var score = 0;
 var lives = 5;
+var infractions = 0;
 
 // TODO:
 // - Add sound effects
@@ -40,6 +42,7 @@ function setup() {
 
   roadMarkings.push(new roadMarking());
   opponents.push(new Opponent());
+  ammets.push(new Ammet());
   player = new Player();
 }
 
@@ -95,6 +98,36 @@ function draw() {
     }
   }
 
+  // New ammet appear after certain number of frames
+  if (frameCount % 130 === 0) {
+    ammets.push(new Ammet());
+  }
+
+  // Show ammets
+  for (var i = ammets.length - 1; i >= 0; i--) {
+    ammets[i].show();
+    ammets[i].update();
+
+    if (ammets[i].overtakenBy(player) && ammets[i].isOvertakenBy === false) {
+      score += 5;
+      ammets[i].isOvertakenBy = true;
+    }
+
+    // If ammets collide with the player, they get destroyed
+    if (ammets[i].hits(player)) {
+      ammets[i].boom();
+      ammets.splice(i, 1);
+
+      // Penalty for collision is +1 infraction
+      infractions += 1;
+    }
+
+    // Remove ammets once the are off the screen
+    else if (ammets[i].offscreen()) {
+      ammets.splice(i, 1);
+    }
+  }
+
   // Show the player
   player.show();
 
@@ -113,19 +146,56 @@ function draw() {
   fill(255);
   text("Score: " + score, 30, 60);
 
+  // Show infractions
+  textSize(40);
+  textFont(font);
+  textAlign(RIGHT);
+  fill(255);
+  text("infractions: " + infractions, 240, 120);
+
   for (var i = 0; i < lives; i++) {
     image(im_heart, 30 + i * 70, height - 60);
   }
 
   // Check if game is over
-  if (lives <= 0) {
+  if (lives <= 0 || infractions >= 3) {
     noLoop();
 
-    textSize(60);
-    textFont(font);
-    textStyle(BOLD);
-    textAlign(CENTER);
-    fill(255);
-    text("GAME OVER", width / 2, height / 2);
+    gameOver();
+  }
+}
+
+// game over screen
+function gameOver() {
+  overlay();
+
+  textSize(60);
+  textFont(font);
+  textStyle(BOLD);
+  textAlign(CENTER);
+  fill(255);
+  text("GAME OVER", width / 2, height / 2);
+
+  textSize(20);
+  text("press ENTER to restart", width / 2, height / 2 + 60);
+}
+
+function overlay() {
+  fill(0, 0, 0, 100);
+  rect(0, 0, width, height);
+}
+
+function restart() {
+  opponents = [];
+  ammets = [];
+  score = 0;
+  lives = 5;
+  infractions = 0;
+  loop();
+}
+
+function keyPressed() {
+  if (keyCode === ENTER) {
+    restart();
   }
 }
