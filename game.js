@@ -62,6 +62,8 @@ function preload() {
   im_background_sea = loadImage("assets/sea_bg.png");
   im_rd_map = loadImage("assets/rd_map.png");
   im_logo = loadImage("assets/logo.png");
+  im_right_arrow = loadImage("assets/right_arrow.svg");
+  im_left_arrow = loadImage("assets/left_arrow.svg");
 
   background_sound = loadSound("assets/background_music.mp3");
   car_crash_sound = loadSound("assets/car_crash.wav");
@@ -212,18 +214,8 @@ function draw() {
     player.turnRight();
   }
 
-  const left_arrow = createImg("assets/left_arrow.svg", "left arrow");
-  left_arrow.dragable = false;
-  left_arrow.position(sideRoadWidth - 30, screenHeight - 50);
-  left_arrow.mouseOver(() => {
-    player.turnLeft();
-  });
-
-  const right_arrow = createImg("assets/right_arrow.svg", "right arrow");
-  right_arrow.position(screenWidth - sideRoadWidth + 8, screenHeight - 50);
-  right_arrow.mouseOver(() => {
-    player.turnRight();
-  });
+  image(im_left_arrow, 10, screenHeight - 50);
+  image(im_right_arrow, screenWidth - 50, screenHeight - 50);
 
   if (cvn.mouseIsPressed) {
     if (cvn.mouseX < width / 2) {
