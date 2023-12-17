@@ -49,6 +49,10 @@ function preload() {
   im_hud_bg = loadImage("assets/hud_bg.png");
 
   background_sound = loadSound("assets/background_music.mp3");
+  car_crash_sound = loadSound("assets/car_crash.wav");
+  car_motor_sound = loadSound("assets/car_motor.wav");
+  ammet_whistle_sound = loadSound("assets/ammet_whistle.wav");
+  car_horn_sound = loadSound("assets/car_horn.wav");
 }
 
 function setup() {
@@ -65,11 +69,19 @@ function setup() {
   player = new Player();
 }
 
-async function draw() {
+function draw() {
   if (startScreen) {
     showStartScreen();
     return;
   }
+
+  if (!background_sound.isPlaying()) {
+    background_sound.play();
+  }
+
+  // if (!car_motor_sound.isPlaying()) {
+  //   car_motor_sound.play();
+  // }
 
   background(104, 104, 104);
 
@@ -119,6 +131,7 @@ async function draw() {
     // If opponents collide with the player, they get destroyed
     if (opponents[i].hits(player)) {
       opponents[i].boom();
+      car_crash_sound.play();
       opponents.splice(i, 1);
 
       // Penalty for collision with opponent
@@ -149,6 +162,7 @@ async function draw() {
     // If ammets collide with the player, they get destroyed
     if (ammets[i].hits(player)) {
       // ammets[i].warning();
+      ammet_whistle_sound.play();
       ammets.splice(i, 1);
 
       // Penalty for collision is +1 infraction
@@ -173,24 +187,12 @@ async function draw() {
     player.turnRight();
   }
 
-  let isTurningLeft = false;
-  let isTurningRight = false;
-
-  // Update player movement
-  function updatePlayerMovement() {
-    if (isTurningLeft) {
+  if (cvn.mouseIsPressed) {
+    if (cvn.mouseX < width / 2) {
       player.turnLeft();
-    }
-    if (isTurningRight) {
+    } else {
       player.turnRight();
     }
-  }
-
-  // Call updatePlayerMovement in the main game loop
-  function draw() {
-    // Your existing code...
-
-    updatePlayerMovement();
   }
 
   // Show infractions
@@ -212,7 +214,7 @@ async function draw() {
   textFont(font);
   textAlign(CENTER);
   fill(0);
-  text(kilometers + "KM", 170, 42);
+  text(`${kilometers} KM`, 170, 42);
 
   // show player lives
   im_hud_bg.resize(111, 48);
@@ -226,10 +228,6 @@ async function draw() {
       image(im_heart, 230 + i * 35, 20);
     }
   }
-
-  // for (var i = 0; i < infractions; i++) {
-  //   image(im_heart_empty, 230 + i * 35, 20);
-  // }
 
   // Check if game is over
   if (lives <= 0 || infractions >= 3) {
@@ -259,6 +257,10 @@ function gameOver() {
 
   textSize(20);
   text("press ENTER to restart", width / 2, height / 2 + 60);
+
+  cvn.mouseClicked(restart);
+
+  background_sound.stop();
 }
 
 function overlay() {
@@ -323,7 +325,4 @@ function showStartScreen() {
 
 function startGame() {
   startScreen = false;
-  if (!background_sound.isPlaying()) {
-    background_sound.play();
-  }
 }

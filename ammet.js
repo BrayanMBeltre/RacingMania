@@ -15,6 +15,10 @@ function Ammet() {
   this.show = function () {
     im_ammet.resize(this.w, this.h);
     image(im_ammet, this.x, this.y);
+
+    // strokeWeight(1);
+    // stroke(255, 0, 0);
+    // rect(this.x, this.y, this.w, this.h);
   };
 
   this.update = function () {
