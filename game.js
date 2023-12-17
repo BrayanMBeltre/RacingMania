@@ -182,6 +182,13 @@ function draw() {
 
     gameOver();
   }
+
+  // Check if player wins
+  if (kilometers <= 0) {
+    noLoop();
+
+    winningScreen();
+  }
 }
 
 // game over screen
@@ -208,8 +215,10 @@ function restart() {
   opponents = [];
   ammets = [];
   score = 0;
-  lives = 5;
+  lives = 3;
   infractions = 0;
+  kilometers = 100;
+
   loop();
 }
 
@@ -217,4 +226,18 @@ function keyPressed() {
   if (keyCode === ENTER) {
     restart();
   }
+}
+
+function winningScreen() {
+  overlay();
+
+  textSize(60);
+  textFont(font);
+  textStyle(BOLD);
+  textAlign(CENTER);
+  fill(255);
+  text("YOU WIN", width / 2, height / 2);
+
+  textSize(20);
+  text("press ENTER to restart", width / 2, height / 2 + 60);
 }

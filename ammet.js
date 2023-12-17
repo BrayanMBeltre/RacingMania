@@ -1,6 +1,6 @@
 function Ammet() {
-  this.w = 80;
-  this.h = 80;
+  this.w = 50;
+  this.h = 50;
 
   // Randomly place the opponent on the road on one of the lanes
   const segment = roadWidth / 3;

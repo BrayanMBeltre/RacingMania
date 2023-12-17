@@ -45,4 +45,10 @@ function Opponent() {
   this.boom = function () {
     image(im_boom, this.x - 50, this.y);
   };
+
+  this.jail = function () {
+    strokeWeight(3);
+    fill(255, 182, 58);
+    rect(this.x, this.y, this.w, this.h);
+  };
 }
