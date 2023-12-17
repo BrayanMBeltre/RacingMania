@@ -34,11 +34,20 @@ var cvn;
 // DONE- When you crash against a car you loose 1 lives
 
 function preload() {
+  font = loadFont("assets/8-bit.ttf");
+
   im_car_green = loadImage("assets/Car_Green.png");
   im_car_red = loadImage("assets/Car_Red.png");
   im_boom = loadImage("assets/boom.png");
   im_heart = loadImage("assets/heart.png");
-  font = loadFont("assets/8-bit.ttf");
+  im_heart_empty = loadImage("assets/heart_empty.png");
+  im_warning_empty = loadImage("assets/warning_empty.png");
+  im_warning = loadImage("assets/warning.png");
+  im_left_side_road = loadImage("assets/left_side_road.png");
+  im_right_side_road = loadImage("assets/right_side_road.png");
+  im_ammet = loadImage("assets/ammet.png");
+  im_hud_bg = loadImage("assets/hud_bg.png");
+
   background_sound = loadSound("assets/background_music.mp3");
 }
 
@@ -50,28 +59,23 @@ function setup() {
 
   // frameRate(50);  // se puede usar esto para diferentes dificultados
 
-  // play sound
-  background_sound.play();
-
   roadMarkings.push(new roadMarking());
   opponents.push(new Opponent());
   ammets.push(new Ammet());
   player = new Player();
 }
 
-function draw() {
+async function draw() {
   if (startScreen) {
     showStartScreen();
     return;
   }
 
-  background(44, 44, 44);
+  background(104, 104, 104);
 
   // Show side roads
-  strokeWeight(0);
-  fill(255, 255, 255);
-  rect(0, 0, sideRoadWidth, screenHeight);
-  rect(screenWidth - sideRoadWidth, 0, sideRoadWidth, screenHeight);
+  image(im_left_side_road, 0, 0);
+  image(im_right_side_road, screenWidth - sideRoadWidth, 0);
 
   // each 60 frames, kilometers decrease by 1
   if (frameCount % 60 === 0) {
@@ -144,7 +148,7 @@ function draw() {
 
     // If ammets collide with the player, they get destroyed
     if (ammets[i].hits(player)) {
-      ammets[i].boom();
+      // ammets[i].warning();
       ammets.splice(i, 1);
 
       // Penalty for collision is +1 infraction
@@ -169,23 +173,63 @@ function draw() {
     player.turnRight();
   }
 
-  // Show player stats
-  textSize(40);
-  textFont(font);
-  textAlign(LEFT);
-  fill(255);
-  text("Km: " + kilometers, 30, 60);
+  let isTurningLeft = false;
+  let isTurningRight = false;
+
+  // Update player movement
+  function updatePlayerMovement() {
+    if (isTurningLeft) {
+      player.turnLeft();
+    }
+    if (isTurningRight) {
+      player.turnRight();
+    }
+  }
+
+  // Call updatePlayerMovement in the main game loop
+  function draw() {
+    // Your existing code...
+
+    updatePlayerMovement();
+  }
 
   // Show infractions
-  textSize(40);
-  textFont(font);
-  textAlign(RIGHT);
-  fill(255);
-  text("infractions: " + infractions, 240, 120);
+  im_hud_bg.resize(111, 48);
+  image(im_hud_bg, 10, 10);
 
-  for (var i = 0; i < lives; i++) {
-    image(im_heart, 30 + i * 70, height - 60);
+  for (var i = 0; i < 3; i++) {
+    image(im_warning_empty, 18 + i * 35, 20);
   }
+
+  for (var i = 0; i < infractions; i++) {
+    image(im_warning, 18 + i * 35, 20);
+  }
+
+  // Show km
+  im_hud_bg.resize(84, 48);
+  image(im_hud_bg, 130, 10);
+  textSize(23);
+  textFont(font);
+  textAlign(CENTER);
+  fill(0);
+  text(kilometers + "KM", 170, 42);
+
+  // show player lives
+  im_hud_bg.resize(111, 48);
+  image(im_hud_bg, 223, 10);
+
+  for (var i = 0; i < 3; i++) {
+    // show empy heart a life is lost
+    if (i >= lives) {
+      image(im_heart_empty, 230 + i * 35, 20);
+    } else {
+      image(im_heart, 230 + i * 35, 20);
+    }
+  }
+
+  // for (var i = 0; i < infractions; i++) {
+  //   image(im_heart_empty, 230 + i * 35, 20);
+  // }
 
   // Check if game is over
   if (lives <= 0 || infractions >= 3) {
@@ -279,5 +323,7 @@ function showStartScreen() {
 
 function startGame() {
   startScreen = false;
-  // background_sound.play();
+  if (!background_sound.isPlaying()) {
+    background_sound.play();
+  }
 }

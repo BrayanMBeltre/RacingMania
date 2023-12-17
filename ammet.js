@@ -1,6 +1,6 @@
 function Ammet() {
-  this.w = 50;
-  this.h = 50;
+  this.w = 71;
+  this.h = 39;
 
   // Randomly place the opponent on the road on one of the lanes
   const segment = roadWidth / 3;
@@ -13,11 +13,8 @@ function Ammet() {
   this.isOvertakenBy = false;
 
   this.show = function () {
-    // image(im_car_purple, this.x, this.y);
-
-    strokeWeight(3);
-    fill(0, 0, 255);
-    rect(this.x, this.y, this.w, this.h);
+    im_ammet.resize(this.w, this.h);
+    image(im_ammet, this.x, this.y);
   };
 
   this.update = function () {
@@ -42,7 +39,7 @@ function Ammet() {
     }
   };
 
-  this.boom = function () {
-    image(im_boom, this.x - 50, this.y);
+  this.warning = function () {
+    image(im_warning, this.x - 50, this.y);
   };
 }
