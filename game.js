@@ -188,6 +188,20 @@ function draw() {
     player.turnRight();
   }
 
+  const left_arrow = createImg("assets/left_arrow.svg", "left arrow");
+  left_arrow.position(20, 550);
+  // while hovering over the left arrow, turn left
+  left_arrow.mouseOver(() => {
+    player.turnLeft();
+  });
+
+  const right_arrow = createImg("assets/right_arrow.svg", "right arrow");
+  right_arrow.position(280, 550);
+  // while hovering over the right arrow, turn right
+  right_arrow.mouseOver(() => {
+    player.turnRight();
+  });
+
   if (cvn.mouseIsPressed) {
     if (cvn.mouseX < width / 2) {
       player.turnLeft();
