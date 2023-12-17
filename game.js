@@ -16,6 +16,8 @@ var score = 0;
 var lives = 3;
 var infractions = 0;
 var kilometers = 100;
+var startScreen = true;
+var cvn;
 
 // TODO:
 // - Add sound effects
@@ -37,15 +39,19 @@ function preload() {
   im_boom = loadImage("assets/boom.png");
   im_heart = loadImage("assets/heart.png");
   font = loadFont("assets/8-bit.ttf");
+  background_sound = loadSound("assets/background_music.mp3");
 }
 
 function setup() {
-  createCanvas(screenWidth, screenHeight);
+  cvn = createCanvas(screenWidth, screenHeight);
 
   //By default, rotations are specified in radians
   angleMode(DEGREES);
 
   // frameRate(50);  // se puede usar esto para diferentes dificultados
+
+  // play sound
+  background_sound.play();
 
   roadMarkings.push(new roadMarking());
   opponents.push(new Opponent());
@@ -54,6 +60,11 @@ function setup() {
 }
 
 function draw() {
+  if (startScreen) {
+    showStartScreen();
+    return;
+  }
+
   background(44, 44, 44);
 
   // Show side roads
@@ -240,4 +251,33 @@ function winningScreen() {
 
   textSize(20);
   text("press ENTER to restart", width / 2, height / 2 + 60);
+}
+
+function showStartScreen() {
+  overlay();
+
+  textSize(55);
+  textFont(font);
+  textStyle(BOLD);
+  textAlign(CENTER);
+  fill(255);
+  text("START GAME", width / 2, height / 2);
+
+  textSize(20);
+  text("press ENTER to start", width / 2, height / 2 + 60);
+
+  if (!background_sound.isPlaying()) {
+    background_sound.stop();
+  }
+
+  cvn.mouseClicked(startGame);
+
+  if (keyIsDown(ENTER)) {
+    startGame();
+  }
+}
+
+function startGame() {
+  startScreen = false;
+  // background_sound.play();
 }
