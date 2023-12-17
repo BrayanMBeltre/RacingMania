@@ -34,13 +34,20 @@ function Ammet() {
       return true;
     }
   };
-
   this.hits = function (player) {
-    if (player.y < this.y + this.h && player.y + player.h > this.y) {
-      if (player.x < this.x + this.w && player.x + player.w > this.x) {
-        return true;
-      }
-    }
+    const playerCenterX = player.x + player.w / 2;
+    const playerCenterY = player.y + player.h / 2;
+    const ammetCenterX = this.x + this.w / 2;
+    const ammetCenterY = this.y + this.h / 2;
+    const distance = dist(
+      playerCenterX,
+      playerCenterY,
+      ammetCenterX,
+      ammetCenterY
+    );
+    const minDistance = (player.w + this.w) / 2;
+
+    return distance < minDistance;
   };
 
   this.warning = function () {
