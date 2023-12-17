@@ -16,8 +16,19 @@ var score = 0;
 var lives = 3;
 var infractions = 0;
 var kilometers = 100;
-var startScreen = true;
+var startScreen = false;
 var cvn;
+
+var rd_map_w_start = 355;
+var rd_map_h_start = 245;
+
+var rd_map_x_start = 0;
+var rd_map_y_start = 200;
+
+var rd_map_x_end = -510;
+var rd_map_y_end = -100;
+var rd_map_w_end = 1167;
+var rd_map_h_end = 804;
 
 // TODO:
 // - Add sound effects
@@ -48,6 +59,9 @@ function preload() {
   im_ammet = loadImage("assets/ammet.png");
   im_medium_hud_bg = loadImage("assets/medium_hud_bg.svg");
   im_small_hud_bg = loadImage("assets/small_hud_bg.svg");
+  im_background_sea = loadImage("assets/sea_bg.png");
+  im_rd_map = loadImage("assets/rd_map.png");
+  im_logo = loadImage("assets/logo.png");
 
   background_sound = loadSound("assets/background_music.mp3");
   car_crash_sound = loadSound("assets/car_crash.wav");
@@ -118,7 +132,17 @@ function draw() {
 
   // Show opponents
   for (var i = opponents.length - 1; i >= 0; i--) {
+    console.log(opponents[i].y);
+    if (opponents[i].y > screenHeight) {
+      image(
+        im_warning,
+        opponents[i].x + opponents[i].w / 2 - 10,
+        screenHeight - 50
+      );
+    }
+
     opponents[i].show();
+
     opponents[i].update();
 
     if (
@@ -311,17 +335,21 @@ function winningScreen() {
 }
 
 function showStartScreen() {
-  overlay();
+  im_background_sea.resize(screenWidth * 2, screenHeight);
+  image(im_background_sea, 0, 0);
 
-  textSize(55);
-  textFont(font);
+  im_rd_map.resize(rd_map_w_start, rd_map_h_start);
+  image(im_rd_map, rd_map_x_start, rd_map_y_start);
+
+  im_logo.resize(264, 74);
+  image(im_logo, 50, 450);
+
+  textSize(10);
+  // textFont(font);
   textStyle(BOLD);
   textAlign(CENTER);
   fill(255);
-  text("START GAME", width / 2, height / 2);
-
-  textSize(20);
-  text("press ENTER to start", width / 2, height / 2 + 60);
+  text(`©Team5 Game Jam RD 🇩🇴 2023`, width / 2, screenHeight - 10);
 
   if (!background_sound.isPlaying()) {
     background_sound.stop();
