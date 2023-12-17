@@ -41,12 +41,13 @@ function preload() {
   im_boom = loadImage("assets/boom.png");
   im_heart = loadImage("assets/heart.png");
   im_heart_empty = loadImage("assets/heart_empty.png");
-  im_warning_empty = loadImage("assets/warning_empty.png");
-  im_warning = loadImage("assets/warning.png");
+  im_warning_empty = loadImage("assets/warning_empty.svg");
+  im_warning = loadImage("assets/warning.svg");
   im_left_side_road = loadImage("assets/left_side_road.png");
   im_right_side_road = loadImage("assets/right_side_road.png");
   im_ammet = loadImage("assets/ammet.png");
-  im_hud_bg = loadImage("assets/hud_bg.png");
+  im_medium_hud_bg = loadImage("assets/medium_hud_bg.svg");
+  im_small_hud_bg = loadImage("assets/small_hud_bg.svg");
 
   background_sound = loadSound("assets/background_music.mp3");
   car_crash_sound = loadSound("assets/car_crash.wav");
@@ -196,20 +197,18 @@ function draw() {
   }
 
   // Show infractions
-  im_hud_bg.resize(111, 48);
-  image(im_hud_bg, 10, 10);
+  image(im_medium_hud_bg, 10, 10);
 
   for (var i = 0; i < 3; i++) {
-    image(im_warning_empty, 18 + i * 35, 20);
+    image(im_warning_empty, 17 + i * 35, 20);
   }
 
   for (var i = 0; i < infractions; i++) {
-    image(im_warning, 18 + i * 35, 20);
+    image(im_warning, 17 + i * 35, 20);
   }
 
   // Show km
-  im_hud_bg.resize(84, 48);
-  image(im_hud_bg, 130, 10);
+  image(im_small_hud_bg, 130, 10);
   textSize(23);
   textFont(font);
   textAlign(CENTER);
@@ -217,8 +216,7 @@ function draw() {
   text(`${kilometers} KM`, 170, 42);
 
   // show player lives
-  im_hud_bg.resize(111, 48);
-  image(im_hud_bg, 223, 10);
+  image(im_medium_hud_bg, 223, 10);
 
   for (var i = 0; i < 3; i++) {
     // show empy heart a life is lost
