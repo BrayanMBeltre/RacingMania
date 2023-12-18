@@ -17,7 +17,7 @@ var lives = 3;
 var infractions = 0;
 var kilometers = 100;
 var startScreen = true;
-var cvn;
+var cnv;
 
 var rd_map_w_start = 355;
 var rd_map_h_start = 245;
@@ -73,7 +73,7 @@ function preload() {
 }
 
 function setup() {
-  cvn = createCanvas(screenWidth, screenHeight);
+  cnv = createCanvas(screenWidth, screenHeight);
 
   //By default, rotations are specified in radians
   angleMode(DEGREES);
@@ -103,6 +103,7 @@ function draw() {
   background(104, 104, 104);
 
   // Show side roads
+  im_left_side_road.resize(sideRoadWidth, screenHeight);
   image(im_left_side_road, 0, 0);
   image(im_right_side_road, screenWidth - sideRoadWidth, 0);
 
@@ -134,7 +135,6 @@ function draw() {
 
   // Show opponents
   for (var i = opponents.length - 1; i >= 0; i--) {
-    console.log(opponents[i].y);
     if (opponents[i].y > screenHeight) {
       image(
         im_warning,
@@ -215,14 +215,22 @@ function draw() {
   }
 
   image(im_left_arrow, 10, screenHeight - 50);
+
+  // check if the mouse is pressed on the left side of the screen
+  if (cnv.mouseX < width / 2 && mouseIsPressed) {
+    player.turnLeft();
+  }
+
   image(im_right_arrow, screenWidth - 50, screenHeight - 50);
 
-  if (cvn.mouseIsPressed) {
-    if (cvn.mouseX < width / 2) {
-      player.turnLeft();
-    } else {
-      player.turnRight();
-    }
+  // check if the mouse is pressed on the right side of the screen
+  if (mouseIsPressed && mouseX > width / 2) {
+    player.turnRight();
+  }
+
+  // check if the mouse is pressed on the right side of the screen
+  if (mouseIsPressed && mouseX < width / 2) {
+    player.turnLeft();
   }
 
   // Show infractions
@@ -285,7 +293,7 @@ function gameOver() {
   textSize(20);
   text("press ENTER to restart", width / 2, height / 2 + 60);
 
-  cvn.mouseClicked(restart);
+  cnv.mouseClicked(restart);
 
   background_sound.stop();
 }
@@ -347,7 +355,7 @@ function showStartScreen() {
     background_sound.stop();
   }
 
-  cvn.mouseClicked(startGame);
+  cnv.mouseClicked(startGame);
 
   if (keyIsDown(ENTER)) {
     startGame();
