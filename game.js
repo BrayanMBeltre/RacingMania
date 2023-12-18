@@ -20,7 +20,7 @@ var cnv;
 var rd_map_w_start = 355;
 var rd_map_h_start = 245;
 
-var rd_map_x_start = 0;
+var rd_map_x_start = width / 2;
 var rd_map_y_start = 200;
 
 var rd_map_x_end = -510;
@@ -107,16 +107,16 @@ function draw() {
   background(104, 104, 104);
   // on mobile devices, the left side of the road is 250px wide
 
-  if (width > 560) {
-    image(im_left_side_road, 0, 0);
-    im_left_side_road.resize(0, height);
-    im_right_side_road.resize(0, height);
-    image(im_right_side_road, width - im_right_side_road.width, 0);
-  } else {
-    im_mobile_left_side_road.resize(sideRoadWidth, 0);
-    image(im_mobile_left_side_road, 0, 0);
-    im_mobile_right_side_road.resize(sideRoadWidth, 0);
-    image(im_mobile_right_side_road, width - sideRoadWidth, 0);
+  const sideWidth = (width - roadWidth) / 2;
+
+  if (width > 500) {
+    image(im_left_side_road, 0, 0, sideWidth, height);
+    image(im_right_side_road, width - sideWidth, 0, sideWidth, height);
+  }
+
+  if (width <= 500) {
+    image(im_mobile_left_side_road, 0, 0, sideWidth, height);
+    image(im_mobile_right_side_road, width - sideWidth, 0, sideWidth, height);
   }
 
   // each 60 frames, kilometers decrease by 1
