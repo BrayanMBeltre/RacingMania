@@ -14,7 +14,7 @@ var score = 0;
 var lives = 3;
 var infractions = 0;
 var kilometers = 100;
-var startScreen = false;
+var startScreen = true;
 var cnv;
 
 var rd_map_w_start = 355;
