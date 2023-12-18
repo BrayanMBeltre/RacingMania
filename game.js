@@ -62,6 +62,7 @@ function preload() {
   car_motor_sound = loadSound("assets/car_motor.wav");
   ammet_whistle_sound = loadSound("assets/ammet_whistle.wav");
   car_horn_sound = loadSound("assets/car_horn.wav");
+  game_over_sound = loadSound("assets/game_over.mp3");
 }
 
 function setup() {
@@ -294,6 +295,10 @@ function gameOver() {
   text("press ENTER to restart", width / 2, height / 2 + 60);
 
   cnv.mouseClicked(restart);
+
+  if (!game_over_sound.isPlaying()) {
+    game_over_sound.play();
+  }
 
   background_sound.stop();
 }

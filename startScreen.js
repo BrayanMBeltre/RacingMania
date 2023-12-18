@@ -7,7 +7,7 @@ var rd_map_x_end = 300;
 var rd_map_y_end = -100;
 var rd_map_w_end = 1167;
 var rd_map_h_end = 804;
-var totalFrames = 100;
+var totalFrames = 300;
 var buttonAlpha = 0;
 
 function startScreen() {
@@ -34,7 +34,7 @@ function startScreen() {
   }
 
   // after 5 seconds, show a start button
-  if (frameCount > 300) {
+  if (frameCount > 200) {
     tint(255, buttonAlpha);
 
     image(
