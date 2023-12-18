@@ -1,7 +1,5 @@
-var screenWidth = 360;
-var screenHeight = 660;
 var roadWidth = 250;
-var sideRoadWidth = (screenWidth - roadWidth) / 2;
+var sideRoadWidth;
 
 var im_car_green;
 var im_car_red;
@@ -16,7 +14,7 @@ var score = 0;
 var lives = 3;
 var infractions = 0;
 var kilometers = 100;
-var startScreen = true;
+var startScreen = false;
 var cnv;
 
 var rd_map_w_start = 355;
@@ -54,8 +52,10 @@ function preload() {
   im_heart_empty = loadImage("assets/heart_empty.png");
   im_warning_empty = loadImage("assets/warning_empty.svg");
   im_warning = loadImage("assets/warning.svg");
-  im_left_side_road = loadImage("assets/left_side_road.png");
-  im_right_side_road = loadImage("assets/right_side_road.png");
+
+  im_left_side_road = loadImage("assets/sea.png");
+  im_right_side_road = loadImage("assets/city.png");
+
   im_ammet = loadImage("assets/ammet.png");
   im_medium_hud_bg = loadImage("assets/medium_hud_bg.svg");
   im_small_hud_bg = loadImage("assets/small_hud_bg.svg");
@@ -73,7 +73,8 @@ function preload() {
 }
 
 function setup() {
-  cnv = createCanvas(screenWidth, screenHeight);
+  cnv = createCanvas(windowWidth - 30, windowHeight - 30);
+  sideRoadWidth = (width - roadWidth) / 2;
 
   //By default, rotations are specified in radians
   angleMode(DEGREES);
@@ -100,12 +101,12 @@ function draw() {
   //   car_motor_sound.play();
   // }
 
-  background(104, 104, 104);
-
   // Show side roads
-  im_left_side_road.resize(sideRoadWidth, screenHeight);
+  background(104, 104, 104);
+  im_left_side_road.resize(0, height);
   image(im_left_side_road, 0, 0);
-  image(im_right_side_road, screenWidth - sideRoadWidth, 0);
+  im_right_side_road.resize(0, height);
+  image(im_right_side_road, width - im_right_side_road.width, 0);
 
   // each 60 frames, kilometers decrease by 1
   if (frameCount % 60 === 0) {
@@ -135,12 +136,9 @@ function draw() {
 
   // Show opponents
   for (var i = opponents.length - 1; i >= 0; i--) {
-    if (opponents[i].y > screenHeight) {
-      image(
-        im_warning,
-        opponents[i].x + opponents[i].w / 2 - 10,
-        screenHeight - 50
-      );
+    console.log(opponents[i].y);
+    if (opponents[i].y > height) {
+      image(im_warning, opponents[i].x + opponents[i].w / 2 - 10, height - 50);
     }
 
     opponents[i].show();
@@ -214,14 +212,14 @@ function draw() {
     player.turnRight();
   }
 
-  image(im_left_arrow, 10, screenHeight - 50);
+  image(im_left_arrow, 10, height - 50);
 
   // check if the mouse is pressed on the left side of the screen
   if (cnv.mouseX < width / 2 && mouseIsPressed) {
     player.turnLeft();
   }
 
-  image(im_right_arrow, screenWidth - 50, screenHeight - 50);
+  image(im_right_arrow, width - 50, height - 50);
 
   // check if the mouse is pressed on the right side of the screen
   if (mouseIsPressed && mouseX > width / 2) {
@@ -335,7 +333,7 @@ function winningScreen() {
 }
 
 function showStartScreen() {
-  im_background_sea.resize(screenWidth * 2, screenHeight);
+  im_background_sea.resize(width * 2, height);
   image(im_background_sea, 0, 0);
 
   im_rd_map.resize(rd_map_w_start, rd_map_h_start);
@@ -349,7 +347,7 @@ function showStartScreen() {
   textStyle(BOLD);
   textAlign(CENTER);
   fill(255);
-  text(`©Team5 Game Jam RD 🇩🇴 2023`, width / 2, screenHeight - 10);
+  text(`©Team5 Game Jam RD 🇩🇴 2023`, width / 2, height - 10);
 
   if (!background_sound.isPlaying()) {
     background_sound.stop();
