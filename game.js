@@ -14,7 +14,7 @@ var score = 0;
 var lives = 3;
 var infractions = 0;
 var kilometers = 100;
-var startScreen = true;
+var startScreen = false;
 var cnv;
 
 var rd_map_w_start = 355;
@@ -55,6 +55,8 @@ function preload() {
 
   im_left_side_road = loadImage("assets/sea.png");
   im_right_side_road = loadImage("assets/city.png");
+  im_mobile_left_side_road = loadImage("assets/left_side_road.png");
+  im_mobile_right_side_road = loadImage("assets/right_side_road.png");
 
   im_ammet = loadImage("assets/ammet.png");
   im_medium_hud_bg = loadImage("assets/medium_hud_bg.svg");
@@ -103,10 +105,19 @@ function draw() {
 
   // Show side roads
   background(104, 104, 104);
-  im_left_side_road.resize(0, height);
-  image(im_left_side_road, 0, 0);
-  im_right_side_road.resize(0, height);
-  image(im_right_side_road, width - im_right_side_road.width, 0);
+  // on mobile devices, the left side of the road is 250px wide
+
+  if (width > 560) {
+    image(im_left_side_road, 0, 0);
+    im_left_side_road.resize(0, height);
+    im_right_side_road.resize(0, height);
+    image(im_right_side_road, width - im_right_side_road.width, 0);
+  } else {
+    im_mobile_left_side_road.resize(sideRoadWidth, 0);
+    image(im_mobile_left_side_road, 0, 0);
+    im_mobile_right_side_road.resize(sideRoadWidth, 0);
+    image(im_mobile_right_side_road, width - sideRoadWidth, 0);
+  }
 
   // each 60 frames, kilometers decrease by 1
   if (frameCount % 60 === 0) {
@@ -362,4 +373,8 @@ function showStartScreen() {
 
 function startGame() {
   startScreen = false;
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth - 30, windowHeight - 30);
 }
